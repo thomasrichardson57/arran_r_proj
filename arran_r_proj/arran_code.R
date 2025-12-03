@@ -6,7 +6,7 @@ library(dplyr) # create data frames while cross referencing other objects (SBL)
 library(viridis) # colour blind friendly colours
 library(ggbreak) # add breaks on some of the axis scales
 library(patchwork) #combine plots
-library(purrr) # functional category mapping
+# library(purrr) # functional category mapping
 #----Import the data----
 
 # birds
@@ -19,24 +19,24 @@ birds.occ$eventDate <- as.numeric(birds.occ$eventDate)
 birds.occ$site <- as.factor(substr(birds.occ$eventID, 1, 1))
 
 
-category_mapping <-list(
-  carnivore=c('Golden eagle','Common raven', 'Common kestrel'),
-  granivore=c('Wood pigeon'),
-  insectivore=c('Long tailed tit','Skylark','Meadow pipit',
-                'Blue tit','European robin','Pied wagtail',
-                'Eurasion wren', 'Coal tit',
-                'Unidentified thrush','Song thrush', 'Treecreeper'),
-  generalist = c('Western jackdaw', 'Carrion crow')
-)
-
-# Create an inverted mapping from species to categories.
-species_to_category <- unlist(lapply(names(category_mapping), function(category) {
-  setNames(rep(category, length(category_mapping[[category]])), category_mapping[[category]])
-}))
-
-# Add new category column to dataframe
-birds.occ <- birds.occ %>%
-  mutate(category = species_to_category[Commonname])
+# category_mapping <-list(
+#   carnivore=c('Golden eagle','Common raven', 'Common kestrel'),
+#   granivore=c('Wood pigeon'),
+#   insectivore=c('Long tailed tit','Skylark','Meadow pipit',
+#                 'Blue tit','European robin','Pied wagtail',
+#                 'Eurasion wren', 'Coal tit',
+#                 'Unidentified thrush','Song thrush', 'Treecreeper'),
+#   generalist = c('Western jackdaw', 'Carrion crow')
+# )
+# 
+# # Create an inverted mapping from species to categories.
+# species_to_category <- unlist(lapply(names(category_mapping), function(category) {
+#   setNames(rep(category, length(category_mapping[[category]])), category_mapping[[category]])
+# }))
+# 
+# # Add new category column to dataframe
+# birds.occ <- birds.occ %>%
+#   mutate(category = species_to_category[Commonname])
 
 south.birds <- birds.occ[birds.occ$site == 'S', ]
 north.birds <- birds.occ[birds.occ$site == 'N', ]
@@ -367,7 +367,7 @@ p1 <- ggplot(combi.sbl.rich.long, aes(measure, value, fill = site)) +
   geom_text(aes(label = value), 
                         position = position_dodge(width = 0.9), 
                         vjust = -0.5,
-            size = 3) + 
+            size = 4) + 
   scale_y_break(c(25,70)) +
   geom_hline(yintercept = 0) +
   theme_bw() +
@@ -376,7 +376,9 @@ p1 <- ggplot(combi.sbl.rich.long, aes(measure, value, fill = site)) +
         axis.title.y.right = element_blank(),
         axis.text.x = element_text(angle = 30, hjust = 1),
         panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank()) +
+        panel.grid.minor = element_blank(),
+        text = element_text(size = 15),
+        legend.position = 'top') +
   scale_x_discrete(labels = c(
     'a.richness' = 'Overall', 'b.sbl_avoid' = 'SBL Avoid Disturbing',
     'c.red_listed' = 'IUCN Red Listed', 'd.amber_listed' = 'IUCN Amber Listed',
@@ -585,7 +587,7 @@ s.moths.order.richness
 s.invert.order.rich <- sum(s.terres.inver.order.rich, s.terres.inver.order.rich,
                            s.moths.order.richness)
 s.invert.order.rich
-
+## test ##
 #### plot ####
 
 # df
@@ -669,7 +671,8 @@ p3 <- ggplot(invert_df_long, aes(resolution, value, fill = site)) +
   coord_cartesian(ylim = c(0,50)) +
   scale_y_continuous(breaks = seq(0, 50, 10)) +
   theme_bw() +
-  theme(legend.position = 'top') +
+  theme(legend.position = 'top',
+        text = element_text(size = 15)) +
   labs(x = 'Taxonomic Resolution', y = 'Richness')
 p3
 
@@ -806,11 +809,12 @@ p.plant <- ggplot(plant_taxa, aes(order, n, fill = site)) +
   theme(axis.text.x = element_text(angle = 30, hjust = 1),
         panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
-        legend.position = 'top') +
+        legend.position = 'top',
+        text = element_text(size = 15)) +
   geom_text(aes(label = n), 
             position = position_dodge(width = 0.9), 
             vjust = -0.5,
-            size = 3) +
+            size = 5) +
   coord_cartesian(ylim = c(0,60))
 p.plant
 
@@ -902,7 +906,8 @@ p6 <- ggplot(wet.invert.stream.richness, aes(streamID, richness, fill = site)) +
   theme(panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
         legend.position = 'top',
-        axis.text.x = element_text(angle = 30, hjust = 1)) + 
+        axis.text.x = element_text(angle = 30, hjust = 1),
+        text = element_text(size = 15)) + 
   geom_hline(yintercept = 0) +
   labs(x = 'Stream', y = 'Species (Common name) Richness',
        title = 'A') +
@@ -914,7 +919,7 @@ p6 <- ggplot(wet.invert.stream.richness, aes(streamID, richness, fill = site)) +
   geom_text(aes(label = richness), 
             position = position_dodge(width = 0.9), 
             vjust = -0.5,
-            size = 3) 
+            size = 4) 
 p6
 
 #### BMWP Scores ####
@@ -981,10 +986,11 @@ p7 <- ggplot(fwi.aspt, aes(stream, aspt, fill = site)) +
   geom_text(aes(label = rounded.aspt), 
             position = position_dodge(width = 0.9), 
             vjust = -0.5,
-            size = 3) +
+            size = 4) +
   theme(panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
-        axis.text.x = element_text(angle = 30, hjust = 1)) +
+        axis.text.x = element_text(angle = 30, hjust = 1),
+        text = element_text(size = 15)) +
   coord_cartesian(ylim = c(0,7)) +
   scale_y_continuous(breaks = seq(0, 7, 1))
   
@@ -996,7 +1002,8 @@ comb_inv_plot <- (p6 + p7)  +
   plot_layout(guides = 'collect') &
   theme(legend.position = 'bottom') &
   labs(x = "Stream") +
-  theme(axis.title.x = element_text())
+  theme(axis.title.x = element_text(),
+        text = element_text(size = 15))
 comb_inv_plot
 
 ggsave('figs/comb_invert_plot.png', dpi = 1000)
@@ -1040,9 +1047,9 @@ head(nbn_area)
 #### prune for useful rows ####
 nbn_df <- data.frame(
   Site = as.factor(c('N', 'S', 'Area')),
-  Invasive_Species = c(nbn_north[12, 2], nbn_south[12, 2], nbn_area[12, 2]),
+  #Invasive_Species = c(nbn_north[12, 2], nbn_south[12, 2], nbn_area[12, 2]),
   Scottish_Biodiversity_List = c(nbn_north[15, 2], nbn_south[15, 2], nbn_area[15, 2]),
-  RSPB_Priority_List = c(nbn_north[16, 2], nbn_south[16, 2], nbn_area[16, 2]),
+  #RSPB_Priority_List = c(nbn_north[16, 2], nbn_south[16, 2], nbn_area[16, 2]),
   Badgers = c(nbn_north[30, 2], nbn_south[30, 2], nbn_area[30, 2]),
   UK_Biodiverity_Action_Plan = c(nbn_north[34, 2], nbn_south[34, 2], nbn_area[34, 2]), # UK biodiversity action plan
   IUCN_amber_birds = c(nbn_north[35, 2], nbn_south[35, 2], nbn_area[35, 2]),
@@ -1066,17 +1073,17 @@ nbn_long_df$count <- as.numeric(nbn_long_df$count)
 
 # totals per site, ELM help
 
-# Calculate the totals for the North and South sites
-north_totals <- sum(nbn_long_df$count[nbn_long_df$Site == "N"])
-south_totals <- sum(nbn_long_df$count[nbn_long_df$Site == "S"])
-
-# Create data frames for the totals
-north_df <- data.frame(Site = "N", category = "Total_N", count = north_totals)
-south_df <- data.frame(Site = "S", category = "Total_S", count = south_totals)
-
-# Combine the originals with the totals
-nbn_long_df <- rbind(nbn_long_df, north_df, south_df)
-
+# # Calculate the totals for the North and South sites
+# north_totals <- sum(nbn_long_df$count[nbn_long_df$Site == "N"])
+# south_totals <- sum(nbn_long_df$count[nbn_long_df$Site == "S"])
+# 
+# # Create data frames for the totals
+# north_df <- data.frame(Site = "N", category = "Total_N", count = north_totals)
+# south_df <- data.frame(Site = "S", category = "Total_S", count = south_totals)
+# 
+# # Combine the originals with the totals
+# nbn_long_df <- rbind(nbn_long_df, north_df, south_df)
+# nbn_long_df
 #### plot ####
 
 p_nbn <- ggplot(nbn_long_df, aes(category, count, fill = Site)) +
@@ -1086,7 +1093,8 @@ p_nbn <- ggplot(nbn_long_df, aes(category, count, fill = Site)) +
                        labels = c('N' = 'North Site', 'S' = 'South Site',
                                   'Area' = 'Lochranza Area'))+
   theme_bw() + 
-  labs(x = 'Category Retrieved from NBN', y = 'Observations from NBN Category') +
+  labs(x = 'Category Retrieved from NBN', y = 'Observations from NBN Category',
+       title = 'A') +
   geom_hline(yintercept = 0) +
   geom_text(aes(label = count), 
             position = position_dodge(width = 0.9), 
@@ -1094,8 +1102,10 @@ p_nbn <- ggplot(nbn_long_df, aes(category, count, fill = Site)) +
             size = 3) +
   theme(panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
-        axis.text.x = element_text(angle = 30, hjust = 1)) +
-  # coord_cartesian(ylim = c(0,45)) + 
+        axis.text.x = element_text(angle = 30, hjust = 1),
+        legend.position = 'top',
+        text = element_text(size = 14)) +
+  coord_cartesian(ylim = c(0,45)) + 
   scale_y_continuous(breaks = seq(0, 45, 5)) +
   geom_vline(xintercept = seq(0.5, length(unique(nbn_long_df$category)) - 0.5, by = 1), 
              linetype = "dashed", color = "grey")
