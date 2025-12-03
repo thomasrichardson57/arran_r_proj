@@ -2,7 +2,7 @@
 library(ggplot2) # plots
 library(readxl) # reading in excel sheets
 library(tidyr) # pivot data from wide to long
-library(dplyr) # create data frames while cross referencing other objects (SBL)
+library(dplyr) # create data frames while cross referencing other objects (useful for SBL)
 library(viridis) # colour blind friendly colours
 library(ggbreak) # add breaks on some of the axis scales
 library(patchwork) #combine plots
@@ -1113,6 +1113,7 @@ p_nbn <- ggplot(nbn_long_df, aes(category, count, fill = Site)) +
 p_nbn
 
 ggsave('figs/nbn_plot.png', dpi = 1000)
+
 
 
 
